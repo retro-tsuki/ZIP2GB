@@ -1,1 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>GarageBand Zip解凍ツール</title>
+</head>
+<body>
+    <h1>.bandファイル復元ツール</h1>
+    <p>zipに圧縮された.bandファイルを選択してください：</p>
 
+    <input type="file" id="zip-input" accept=".zip">
+
+    <div id="status">ここに状況が表示されます</div>
+
+    <script>
+        // ボタンが押されて、ファイルが選択された時の動き
+        const fileInput = document.getElementById('zip-input');
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('status').innerText = file.name + " が読み込まれました！";
+            }
+        });
+    </script>
+</body>
+</html>
