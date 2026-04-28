@@ -1,22 +1,22 @@
-const fileInput = document.getElementById('zip-input');
-const status = document.getElementById('status');
-
-fileInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    status.innerText = "解凍中...";
-
-    // JSZipを使ってファイルを読み込む
-    const zip = new JSZip();
-    zip.loadAsync(file).then(function(contents) {
-        status.innerHTML = "<strong>zipの中身:</strong><br>";
+zip.loadAsync(file).then(function(contents) {
+    let output = "<strong>スキャン結果:</strong><br><ul style='text-align:left;'>";
+    
+    // filesオブジェクトの中身をすべてループで回す
+    Object.keys(contents.files).forEach(function(filename) {
+        const fileData = contents.files[filename];
         
-        // zipの中にあるファイル名をすべてリストアップする
-        Object.keys(contents.files).forEach(function(filename) {
-            status.innerHTML += filename + "<br>";
-        });
-    }).catch(function(err) {
-        status.innerText = "エラーが発生しました: " + err.message;
+        // フォルダかファイルかを判定
+        if (fileData.dir) {
+            output += `<li style="color: blue;">📁 ${filename} (フォルダ)</li>`;
+        } else {
+            // ファイルの場合はサイズも表示
+            const size = (fileData._data.uncompressedSize / 1024).toFixed(2);
+            output += `<li>📄 ${filename} (${size} KB)</li>`;
+        }
     });
+    
+    output += "</ul>";
+    status.innerHTML = output;
+}).catch(function(err) {
+    status.innerText = "エラー: " + err.message;
 });
