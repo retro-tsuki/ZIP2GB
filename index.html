@@ -1,50 +1,69 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <meta charset="UTF-8">
-    <title>GarageBand Zip解凍ツール</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GarageBand Zip Extractor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
     <h1>.bandファイル復元ツール</h1>
-    <p>zipに圧縮された.bandファイルを選択してください：</p>
-
+    <p>zipを選択してください：</p>
+    
     <input type="file" id="zip-input" accept=".zip">
-
-    <div id="status">ここに状況が表示されます</div>
+    <hr>
+    <div id="status" style="padding: 10px; background: #f0f0f0; border-radius: 5px;">
+        ファイルを待機中...
+    </div>
 
     <script>
-        // ボタンが押されて、ファイルが選択された時の動き
-        const fileInput = document.getElementById('zip-input');
-        fileInput.addEventListener('change', function(e) {
+        document.getElementById('zip-input').addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file) {
-                document.getElementById('status').innerText = file.name + " が読み込まれました！";
-            }
+            const status = document.getElementById('status');
+
+            if (!file) return;
+
+            status.innerHTML = "<strong>解析中...</strong>";
+
+            const reader = new FileReader();
+            
+            // ファイルを読み込む（iOSブラウザでの安定性のためにFileReaderを使用）
+            reader.onload = function(event) {
+                const arrayBuffer = event.target.result;
+                const zip = new JSZip();
+
+                zip.loadAsync(arrayBuffer).then(function(contents) {
+                    let output = "<strong>スキャン完了！中身はこちら:</strong><br><ul style='text-align:left;'>";
+                    
+                    const files = Object.keys(contents.files);
+                    if (files.length === 0) {
+                        output += "<li>(zipの中身が空、または解析できませんでした)</li>";
+                    }
+
+                    files.forEach(function(filename) {
+                        const fileData = contents.files[filename];
+                        if (fileData.dir) {
+                            output += `<li style="color: blue;">📁 ${filename}</li>`;
+                        } else {
+                            const size = (fileData._data.uncompressedSize / 1024 || 0).toFixed(2);
+                            output += `<li>📄 ${filename} (${size} KB)</li>`;
+                        }
+                    });
+                    
+                    output += "</ul>";
+                    status.innerHTML = output;
+                }).catch(function(err) {
+                    status.innerHTML = "<span style='color:red;'>解析エラー: " + err.message + "</span>";
+                });
+            };
+
+            reader.onerror = function() {
+                status.innerHTML = "ファイルの読み込みに失敗しました。";
+            };
+
+            // 実際に読み込みを開始
+            reader.readAsArrayBuffer(file);
         });
-        zip.loadAsync(file).then(function(contents) {
-    let output = "<strong>スキャン結果:</strong><br><ul style='text-align:left;'>";
-    
-    // filesオブジェクトの中身をすべてループで回す
-    Object.keys(contents.files).forEach(function(filename) {
-        const fileData = contents.files[filename];
-        
-        // フォルダかファイルかを判定
-        if (fileData.dir) {
-            output += `<li style="color: blue;">📁 ${filename} (フォルダ)</li>`;
-        } else {
-            // ファイルの場合はサイズも表示
-            const size = (fileData._data.uncompressedSize / 1024).toFixed(2);
-            output += `<li>📄 ${filename} (${size} KB)</li>`;
-        }
-    });
-    
-    output += "</ul>";
-    status.innerHTML = output;
-}).catch(function(err) {
-    status.innerText = "エラー: " + err.message;
-});
     </script>
-    
 </body>
 </html>
