@@ -22,7 +22,7 @@
                 document.getElementById('status').innerText = file.name + " が読み込まれました！";
             }
         });
-    </script>zip.loadAsync(file).then(function(contents) {
+        zip.loadAsync(file).then(function(contents) {
     let output = "<strong>スキャン結果:</strong><br><ul style='text-align:left;'>";
     
     // filesオブジェクトの中身をすべてループで回す
@@ -44,5 +44,7 @@
 }).catch(function(err) {
     status.innerText = "エラー: " + err.message;
 });
+    </script>
+    
 </body>
 </html>
