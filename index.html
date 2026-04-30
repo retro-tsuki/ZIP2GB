@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <h1>.bandファイル復元ツール</h1>
+    <h1>ZIP2GB/.bandファイル復元ツール</h1>
     <p>zipを選択してください：</p>
     <input type="file" id="zip-input" accept=".zip">
     
@@ -39,7 +39,7 @@
                 const zip = new JSZip();
                 zip.loadAsync(event.target.result).then(function(contents) {
                     currentZip = contents;
-                    document.getElementById('status').innerHTML = "解析完了！<br>ボタンを押してiPhoneに保存してください。";
+                    document.getElementById('status').innerHTML = "解析完了！<br>ボタンを押してiOSデバイスに保存してください。";
                     document.getElementById('download-btn').style.display = "inline-block";
                 });
             };
