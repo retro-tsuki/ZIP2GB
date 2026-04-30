@@ -1,11 +1,12 @@
 # ZIP2GB
 
 ## 概要
-Googleドライブ等を経由して「ただ.zipのファイル」になってしまったGarageBandプロジェクトを、iOSが認識できる「パッケージ（フォルダ）」の状態に復元します。GB2MIDI(https://github.com/larkob/GB2MIDI) から感銘を受け制作しました。
+Googleドライブ等を経由して「ただ.zipのファイル」になってしまったGarageBandプロジェクトを、iOSが認識できる「パッケージ（フォルダ）」の状態に復元します。[GB2MIDI] (https://github.com/larkob/GB2MIDI) から感銘を受け制作しました。
 
 
 ## ツールへはこちら
-ZIP2GB(https://retro-tsuki.github.io/ZIP2GB/)
+[ZIP2GB](https://retro-tsuki.github.io/ZIP2GB/)
+https://retro-tsuki.github.io/ZIP2GB/
 
 ## 使い方
 1. 復元したい.zipファイルを選択
